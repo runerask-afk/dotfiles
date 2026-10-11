@@ -76,6 +76,7 @@ fi
 # 8. Install Ble.sh (Bash Line Editor)
 if [ ! -d "$HOME/.local/share/blesh" ]; then
     echo "--> Installing ble.sh..."
+    rm -rf /tmp/ble.sh
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git /tmp/ble.sh
     make -C /tmp/ble.sh install PREFIX="$HOME/.local"
     rm -rf /tmp/ble.sh
