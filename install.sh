@@ -41,13 +41,13 @@ echo "--> Installing system packages..."
 if command_exists apt-get; then
     sudo apt-get update
     # Added fontconfig and unzip here so container tests pass smoothly
-    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
+    sudo apt-get install -y curl git unzip fontconfig fzf eza xz-utils|| true
     # Try installing tldr, fallback to python/npm client if apt package fails
     sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
 elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
+    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza xz
 elif command_exists dnf; then
-    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
+    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza xz
 fi
 
 
