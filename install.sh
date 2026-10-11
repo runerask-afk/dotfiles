@@ -30,7 +30,23 @@ if [ "$ORIGINAL_SHELL" != "bash" ]; then
     chsh -s "$(which bash)"
 fi
 
-# 4. Install JetBrains Mono Nerd Font
+
+# 4. Install System Tools & Dependencies (Fontconfig, Unzip, Eza, FZF, TLDR, Curl, Git)
+echo "--> Installing system packages..."
+if command_exists apt-get; then
+    sudo apt-get update
+    # Added fontconfig and unzip here so container tests pass smoothly
+    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
+    # Try installing tldr, fallback to python/npm client if apt package fails
+    sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
+elif command_exists pacman; then
+    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
+elif command_exists dnf; then
+    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
+fi
+
+
+# 5. Install JetBrains Mono Nerd Font
 echo "--> Checking JetBrains Mono Nerd Font..."
 mkdir -p "$HOME/.local/share/fonts"
 if ! fc-list | grep -i "JetBrainsMono" > /dev/null 2>&1; then
@@ -46,20 +62,6 @@ fi
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
-
-# 5. Install System Tools & Dependencies (Fontconfig, Unzip, Eza, FZF, TLDR, Curl, Git)
-echo "--> Installing system packages..."
-if command_exists apt-get; then
-    sudo apt-get update
-    # Added fontconfig and unzip here so container tests pass smoothly
-    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
-    # Try installing tldr, fallback to python/npm client if apt package fails
-    sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
-elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
-elif command_exists dnf; then
-    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
-fi
 
 # 6. Install Starship Prompt (if missing)
 if ! command_exists starship; then
