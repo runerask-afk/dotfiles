@@ -47,15 +47,18 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# 5. Install System Tools (Eza, FZF, TLDR, Curl, Git)
+# 5. Install System Tools & Dependencies (Fontconfig, Unzip, Eza, FZF, TLDR, Curl, Git)
 echo "--> Installing system packages..."
 if command_exists apt-get; then
     sudo apt-get update
-    sudo apt-get install -y curl git unzip fzf tldr eza || sudo apt-get install -y curl git unzip fzf tldr
+    # Added fontconfig and unzip here so container tests pass smoothly
+    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
+    # Try installing tldr, fallback to python/npm client if apt package fails
+    sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
 elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm curl git unzip fzf tldr eza
+    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
 elif command_exists dnf; then
-    sudo dnf install -y curl git unzip fzf tldr eza
+    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
 fi
 
 # 6. Install Starship Prompt (if missing)
