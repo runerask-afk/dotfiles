@@ -4,6 +4,11 @@
 # set -e: Exit immediately if any command fails to prevent broken setups
 set -e
 
+# Helper function to check if a command exists in system PATH
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 DOTFILES_DIR="$HOME/.dotfiles"
 STATE_FILE="$DOTFILES_DIR/.original_state"
 
@@ -58,10 +63,6 @@ if ! fc-list | grep -i "JetBrainsMono" > /dev/null 2>&1; then
     fc-cache -fv "$HOME/.local/share/fonts" > /dev/null 2>&1
 fi
 
-# Helper function to check if a command exists in system PATH
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
 
 # 6. Install Starship Prompt (if missing)
 if ! command_exists starship; then
