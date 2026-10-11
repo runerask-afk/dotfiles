@@ -52,13 +52,13 @@ echo "--> Installing system packages..."
 if command_exists apt-get; then
     sudo apt-get update
     # Added fontconfig and unzip here so container tests pass smoothly
-    sudo apt-get install -y curl git unzip fontconfig fzf eza build-essential gawk|| true
+    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
     # Try installing tldr, fallback to python/npm client if apt package fails
     sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
 elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm base-devel gawk curl git unzip fontconfig fzf tealdeer eza
+    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
 elif command_exists dnf; then
-    sudo dnf install -y gcc gawk curl git unzip fontconfig fzf tealdeer eza
+    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
 fi
 
 # 6. Install Starship Prompt (if missing)
@@ -77,7 +77,8 @@ fi
 if [ ! -d "$HOME/.local/share/blesh" ]; then
     echo "--> Installing ble.sh..."
     rm -rf /tmp/ble.sh
-    git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git /tmp/ble.sh
+    mkdir -p ~/.local/share/blesh
+    curl -L https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly.tar.xz | tar xJ -C ~/.local/share/blesh --strip-components=1
     make -C /tmp/ble.sh install PREFIX="$HOME/.local"
     rm -rf /tmp/ble.sh
 
