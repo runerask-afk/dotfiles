@@ -1,38 +1,62 @@
 #!/usr/bin/env bash
-# ^ Shebang: Execute with Bash.
+# ^ Shebang: Tells the OS to execute this script using Bash.
+
+# set -e: Exit immediately if any command fails
+set -e
 
 DOTFILES_DIR="$HOME/.dotfiles"
 STATE_FILE="$DOTFILES_DIR/.original_state"
 
+# Check if the state file exists before trying to revert
 if [ ! -f "$STATE_FILE" ]; then
     echo "Error: No state file found ($STATE_FILE). Cannot automatically revert."
     exit 1
 fi
 
-# Load the saved state variables (ORIGINAL_SHELL, ORIGINAL_RC)
+# Load the saved state variables (ORIGINAL_SHELL and ORIGINAL_RC) from the hidden file
 source "$STATE_FILE"
 
 echo "--> Reverting environment back to original state..."
 
-# 1. Remove your custom dotfiles links
+# 1. Remove custom dotfiles links and modular folders
 rm -f "$HOME/.bashrc"
 rm -f "$HOME/.bash_mods"
 
-# 2. Restore the host's original configuration backup if it exists
+# 2. Clean up ble.sh ONLY if it was installed by this dotfiles script
+if [ "${BLESH_INSTALLED_BY_US:-false}" = "true" ] && [ -d "$HOME/.local/share/blesh" ]; then
+    echo "--> Removing local ble.sh installation (installed by dotfiles)..."
+    rm -rf "$HOME/.local/share/blesh"
+else
+    echo "--> Leaving ble.sh intact (was present before dotfiles setup or not installed)."
+fi
+
+# 3. Restore the host's original configuration backup if it exists
 HOST_RC="$HOME/.${ORIGINAL_SHELL}rc"
 if [ -f "${HOST_RC}.bak" ]; then
     echo "--> Restoring original .${ORIGINAL_SHELL}rc backup..."
+    # mv: Moves the .bak file back to its original filename, overwriting the symlink
     mv "${HOST_RC}.bak" "$HOST_RC"
 fi
 
-# 3. Revert the default login shell back to what it originally was
+# 4. Clean up or restore Nano configuration
+if [ "${NANORC_INSTALLED_BY_US:-false}" = "true" ]; then
+    rm -f "$HOME/.nanorc"
+    echo "--> Removed dotfiles nano configuration."
+elif [ -f "$HOME/.nanorc.bak" ]; then
+    rm -f "$HOME/.nanorc"
+    mv "$HOME/.nanorc.bak" "$HOME/.nanorc"
+    echo "--> Restored original .nanorc backup."
+fi
+
+# 5. Revert the default login shell back to what it originally was
 CURRENT_SHELL=$(basename "$SHELL")
 if [ "$CURRENT_SHELL" != "$ORIGINAL_SHELL" ]; then
-    echo "--> Reverting default shell back to $ORIGINAL_SHELL..."
+    echo "--> Reverting default login shell back to $ORIGINAL_SHELL..."
     chsh -s "$(which "$ORIGINAL_SHELL")"
 fi
 
-# 4. Clean up the state file
+# 6. Clean up the state tracking file
 rm -f "$STATE_FILE"
+rm -f "$HOME/.nanorc"
 
 echo "--> Restoration complete! Host system is fully reverted."

@@ -1,0 +1,27 @@
+# ~/.dotfiles/nano/nanorc
+
+# 1. Enable Line Numbers on the side
+set linenumbers
+
+# 2. Enable Mouse Support (click anywhere in the file to move your cursor)
+set mouse
+
+# 3. Smart Home Key (pressing Home jumps to the first non-whitespace character, press again to go to column 0)
+set smooth
+set smarthome
+
+# 4. Tab Settings (use 4 spaces instead of a literal tab character)
+set tabsize 4
+set tabstospaces
+
+# 5. Enable Soft Wrapping (long lines wrap gracefully instead of scrolling infinitely off-screen)
+set nowrap
+
+# 6. Auto-Indent new lines to match the previous line's indentation
+set autoindent
+
+# 7. Show a helpful status bar at the bottom with real-time cursor coordinates
+set const
+
+# 8. Include Nano's built-in syntax coloring files (gives you colors for Bash, Python, JSON, Markdown, etc.)
+include "/usr/share/nano/*.nanorc"
