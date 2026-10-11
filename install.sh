@@ -52,13 +52,13 @@ echo "--> Installing system packages..."
 if command_exists apt-get; then
     sudo apt-get update
     # Added fontconfig and unzip here so container tests pass smoothly
-    sudo apt-get install -y curl git unzip fontconfig fzf eza || true
+    sudo apt-get install -y curl git unzip fontconfig fzf eza build-essential gawk|| true
     # Try installing tldr, fallback to python/npm client if apt package fails
     sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
 elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza
+    sudo pacman -Sy --noconfirm base-devel gawk curl git unzip fontconfig fzf tealdeer eza
 elif command_exists dnf; then
-    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza
+    sudo dnf install -y gcc gawk curl git unzip fontconfig fzf tealdeer eza
 fi
 
 # 6. Install Starship Prompt (if missing)
