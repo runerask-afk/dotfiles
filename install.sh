@@ -102,6 +102,38 @@ echo "--> Linking Nano configuration..."
 rm -f "$HOME/.nanorc"
 ln -s "$DOTFILES_DIR/nano/nanorc" "$HOME/.nanorc"
 
+# 11. Link Starship configuration safely
+echo "--> Linking Starship configuration..."
 
+# Ensure the ~/.config directory exists
+mkdir -p "$HOME/.config"
+
+# Check if a custom starship.toml already exists (as a regular file or symlink)
+if [ -f "$HOME/.config/starship.toml" ] || [ -L "$HOME/.config/starship.toml" ]; then
+    echo "--> Backing up existing starship.toml to starship.toml.bak"
+    cp -L "$HOME/.config/starship.toml" "$HOME/.config/starship.toml.bak"
+    echo "STARSHIP_CONFIG_INSTALLED_BY_US=false" >> "$STATE_FILE"
+else
+    echo "STARSHIP_CONFIG_INSTALLED_BY_US=true" >> "$STATE_FILE"
+fi
+
+# Remove existing link/file and create symlink to dotfiles repo
+rm -f "$HOME/.config/starship.toml"
+ln -s "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+
+# 12. Link Fastfetch configuration sa
+echo "--> Linking Fastfetch configuration..."
+mkdir -p "$HOME/.config/fastfetch"
+
+if [ -f "$HOME/.config/fastfetch/config.jsonc" ] || [ -L "$HOME/.config/fastfetch/config.jsonc" ]; then
+    echo "--> Backing up existing config.jsonc..."
+    cp -L "$HOME/.config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc.bak"
+    echo "FASTFETCH_CONFIG_INSTALLED_BY_US=false" >> "$STATE_FILE"
+else
+    echo "FASTFETCH_CONFIG_INSTALLED_BY_US=true" >> "$STATE_FILE"
+fi
+
+rm -f "$HOME/.config/fastfetch/config.jsonc"
+ln -s "$DOTFILES_DIR/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
 
 echo "==> Installation complete! Restart your terminal to experience your new setup."

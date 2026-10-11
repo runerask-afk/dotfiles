@@ -67,3 +67,8 @@ fi
 export EDITOR="nano"
 export VISUAL="nano"
 
+# Display Fastfetch on interactive login 
+if command -v fastfetch &> /dev/null && [ -z "$FASTFETCH_DISPLAYED" ]; then
+    export FASTFETCH_DISPLAYED=1
+    fastfetch
+fi

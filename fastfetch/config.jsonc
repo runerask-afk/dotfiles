@@ -1,0 +1,85 @@
+// ~/.dotfiles/fastfetch/config.jsonc
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "small",
+        "padding": {
+            "top": 1,
+            "left": 1
+        }
+    },
+    "display": {
+        "separator": " ➜  "
+    },
+    "modules": [
+        "title",
+        "separator",
+        
+        // 1. Core Node Identity
+        {
+            "type": "os",
+            "key": "OS          "
+        },
+        {
+            "type": "host",
+            "key": "Hardware    "
+        },
+        {
+            "type": "kernel",
+            "key": "Kernel      "
+        },
+        {
+            "type": "uptime",
+            "key": "Uptime      "
+        },
+
+        "break",
+
+        // 2. Resources & Thermal Monitoring
+        {
+            "type": "cpu",
+            "key": "CPU         "
+        },
+        {
+            "type": "cpuUsage",
+            "key": "CPU Load    "
+        },
+        {
+            "type": "temperature",
+            "key": "Temp        " // Crucial for Raspberry Pi throttling checks!
+        },
+        {
+            "type": "memory",
+            "key": "RAM Usage   "
+        },
+        {
+            "type": "disk",
+            "key": "Disk (/)    ",
+            "folders": "/"
+        },
+
+        "break",
+
+        // 3. Network / Connectivity
+        {
+            "type": "localip",
+            "key": "Local IP    ",
+            "showIpv6": false
+        },
+        {
+            "type": "publicip",
+            "key": "Public IP   ",
+            "timeout": 1000
+        },
+
+        "break",
+
+        // 4. Container & Virtualization Detection
+        {
+            "type": "virtualmachine",
+            "key": "Platform    "
+        },
+
+        "colors"
+    ]
+}

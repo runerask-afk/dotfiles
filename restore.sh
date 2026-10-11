@@ -55,8 +55,28 @@ if [ "$CURRENT_SHELL" != "$ORIGINAL_SHELL" ]; then
     chsh -s "$(which "$ORIGINAL_SHELL")"
 fi
 
-# 6. Clean up the state tracking file
+# 6. Clean up or restore Starship configuration
+if [ "${STARSHIP_CONFIG_INSTALLED_BY_US:-false}" = "true" ]; then
+    echo "--> Removing dotfiles Starship configuration..."
+    rm -f "$HOME/.config/starship.toml"
+elif [ -f "$HOME/.config/starship.toml.bak" ]; then
+    echo "--> Restoring original starship.toml backup..."
+    rm -f "$HOME/.config/starship.toml"
+    mv "$HOME/.config/starship.toml.bak" "$HOME/.config/starship.toml"
+fi
+
+
+# 7. Clean up Fastfetch configuration
+if [ "${FASTFETCH_CONFIG_INSTALLED_BY_US:-false}" = "true" ]; then
+    echo "--> Removing dotfiles Fastfetch configuration..."
+    rm -f "$HOME/.config/fastfetch/config.jsonc"
+elif [ -f "$HOME/.config/fastfetch/config.jsonc.bak" ]; then
+    echo "--> Restoring original config.jsonc backup..."
+    rm -f "$HOME/.config/fastfetch/config.jsonc"
+    mv "$HOME/.config/fastfetch/config.jsonc.bak" "$HOME/.config/fastfetch/config.jsonc"
+fi
+
+# 8. Clean up the state tracking file
 rm -f "$STATE_FILE"
-rm -f "$HOME/.nanorc"
 
 echo "--> Restoration complete! Host system is fully reverted."

@@ -1,0 +1,34 @@
+# ~/.dotfiles/starship/starship.toml
+
+# Insert a blank line between shell commands
+add_newline = true
+
+# Timeout for commands executed by Starship (in milliseconds)
+command_timeout = 500
+
+# Custom character indicators
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+# Directory formatting
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bold cyan"
+
+# Git repository branch formatting
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+# Git status indicators (staged, modified, untracked)
+[git_status]
+style = "bold red"
+staged = '[+$count](green)'
+modified = '[!$count](yellow)'
+untracked = '[?$count](bright-blue)'
+
+# Package/Language versions
+[package]
+disabled = true # Disables showing package version numbers (like package.json)
