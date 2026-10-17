@@ -30,6 +30,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias cp='cp -i'
 alias mv='mv -i'
+alias cdi="zi"
 
 # 3.2 Aliases (Eza replacing standard ls)
 if command -v eza &> /dev/null; then
@@ -47,7 +48,7 @@ fi
 
 # 5. Initialize Zoxide (Smart directory jumper)
 if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
+    eval "$(zoxide init bash --cmd cd)"
 fi
 
 # 6. Initialize Starship Prompt (Must be initialized last)
