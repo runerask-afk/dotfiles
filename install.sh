@@ -82,7 +82,6 @@ if [ ! -d "$HOME/.local/share/blesh" ]; then
     rm -rf /tmp/ble.sh
     mkdir -p ~/.local/share/blesh
     curl -L https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly.tar.xz | tar xJ -C ~/.local/share/blesh --strip-components=1
-    make -C /tmp/ble.sh install PREFIX="$HOME/.local"
     rm -rf /tmp/ble.sh
 
     # Record that WE installed ble.sh so restore.sh knows it is safe to delete later

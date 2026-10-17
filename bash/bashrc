@@ -67,6 +67,8 @@ fi
 export EDITOR="nano"
 export VISUAL="nano"
 
+export PATH="$HOME/.local/bin:$PATH"
+
 # Display Fastfetch on interactive login 
 if command -v fastfetch &> /dev/null && [ -z "$FASTFETCH_DISPLAYED" ]; then
     export FASTFETCH_DISPLAYED=1
