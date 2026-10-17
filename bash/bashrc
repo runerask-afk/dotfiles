@@ -55,15 +55,7 @@ if command -v starship &> /dev/null; then
     eval "$(starship init bash)"
 fi
 
-# 7. Load custom mods from mods/ directory automatically
-if [ -d "$HOME/.dotfiles/bash/mods" ]; then
-    for mod in "$HOME/.dotfiles/bash/mods/"*.sh; do
-        [ -f "$mod" ] && source "$mod"
-    done
-fi
-
-
-# 8. Set default editor for system tools and Git
+# 7. Set default editor for system tools and Git
 export EDITOR="nano"
 export VISUAL="nano"
 
