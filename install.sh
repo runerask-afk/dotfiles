@@ -37,17 +37,30 @@ fi
 
 
 # 4. Install System Tools & Dependencies (Fontconfig, Unzip, Eza, FZF, TLDR, Curl, Git)
-echo "--> Installing system packages..."
-if command_exists apt-get; then
-    sudo apt-get update
-    # Added fontconfig and unzip here so container tests pass smoothly
-    sudo apt-get install -y curl git unzip fontconfig fzf eza xz-utils|| true
-    # Try installing tldr, fallback to python/npm client if apt package fails
-    sudo apt-get install -y tealdeer || echo "--> Note: apt tldr package skipped, can use node/python client if needed."
-elif command_exists pacman; then
-    sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza xz
-elif command_exists dnf; then
-    sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza xz
+# Check if running as root
+if [ "$EUID" -eq 0 ]; then
+    echo "--> Running as root. Installing system packages directly..."
+    # Run apt/pacman/dnf commands directly WITHOUT 'sudo'
+    if command_exists apt-get; then
+        apt-get update && apt-get install -y curl git unzip fontconfig fzf tealdeer eza xz-utils
+    elif command_exists pacman; then
+        pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza xz
+    elif command_exists dnf; then
+        dnf install -y curl git unzip fontconfig fzf tealdeer eza xz
+    fi
+elif command_exists sudo && sudo -n true 2>/dev/null; then
+    echo "--> Running as standard user with passwordless sudo access..."
+    # Run apt/pacman/dnf commands WITH 'sudo'
+    if command_exists apt-get; then
+        sudo apt-get update && sudo apt-get install -y curl git unzip fontconfig fzf eza xz-utils
+    elif command_exists pacman; then
+        sudo pacman -Sy --noconfirm curl git unzip fontconfig fzf tealdeer eza xz
+    elif command_exists dnf; then
+        sudo dnf install -y curl git unzip fontconfig fzf tealdeer eza xz
+    fi
+else
+    echo "--> Running as a standard user WITHOUT sudo access."
+    echo "--> Skipping system package installation. Assuming required binaries exist or relying on local tools."
 fi
 
 
